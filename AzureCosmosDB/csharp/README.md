@@ -90,7 +90,7 @@ Currently this proof of concept uses:
 
 1. Query data
 
-    Build an intelligent, context-aware application using the searchable data in your Cosmos DB account. See the [documentation](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/vector-search) for details.
+    Build an intelligent, context-aware application using the searchable data in your Cosmos DB account. See the [documentation](https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search) for details.
 
     Good luck!
 
