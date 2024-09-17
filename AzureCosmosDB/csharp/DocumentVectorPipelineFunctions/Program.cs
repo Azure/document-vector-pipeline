@@ -52,7 +52,7 @@ hostBuilder.ConfigureServices(sc =>
             {
                 ApplicationName = "document ingestion",
                 AllowBulkExecution = true,
-                Serializer = new CosmosSystemTextJsonSerializer(JsonSerializerOptions.Default),
+                UseSystemTextJsonSerializerWithOptions = JsonSerializerOptions.Default,
             });
         return cosmosClient;
     });
