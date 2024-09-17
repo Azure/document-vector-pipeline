@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: document-vector-pipeline
+metadata:
+    template: azd-init@1.9.5
+services:
+    DocumentVectorPipelineFunctions:
+        project: DocumentVectorPipelineFunctions
+        host: function
+        language: dotnet
