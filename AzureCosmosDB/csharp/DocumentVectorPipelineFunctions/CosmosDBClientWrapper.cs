@@ -33,7 +33,7 @@ internal class CosmosDBClientWrapper
         return instance;
     }
 
-    public async Task UpsertDocumentsAsync(string fileUri, List<TextChunk> chunks, EmbeddingCollection embeddings)
+    public async Task UpsertDocumentsAsync(string fileUri, List<TextChunk> chunks, EmbeddingCollection embeddings, CancellationToken cancellationToken)
     {
         if (this.container == null)
         {
@@ -51,7 +51,7 @@ internal class CosmosDBClientWrapper
                 ChunkText = chunks[index].Text,
                 PageNumber = chunks[index].PageNumberIfKnown,
             };
-            upsertTasks.Add(this.UpsertDocumentWithRetryAsync(documentChunk, CosmosDBClientWrapper.MaxRetryCount));
+            upsertTasks.Add(this.UpsertDocumentWithRetryAsync(documentChunk, CosmosDBClientWrapper.MaxRetryCount, cancellationToken));
         }
 
         try
@@ -72,7 +72,8 @@ internal class CosmosDBClientWrapper
         }
     }
 
-    private async Task<ItemResponse<DocumentChunk>> UpsertDocumentWithRetryAsync(DocumentChunk document, int maxRetryAttempts)
+    private async Task<ItemResponse<DocumentChunk>> UpsertDocumentWithRetryAsync(DocumentChunk document,
+        int maxRetryAttempts, CancellationToken cancellationToken)
     {
         if (this.container == null)
         {
@@ -84,7 +85,7 @@ internal class CosmosDBClientWrapper
         {
             try
             {
-                return await this.container.UpsertItemAsync(document);
+                return await this.container.UpsertItemAsync(document, cancellationToken: cancellationToken);
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.TooManyRequests)
             {
