@@ -41,7 +41,7 @@ internal class CosmosDBClientWrapper
         }
 
         var upsertTasks = new List<Task<ItemResponse<DocumentChunk>>>();
-        for (int index = 0; index < chunks.Count; index++)
+        for (var index = 0; index < chunks.Count; index++)
         {
             var documentChunk = new DocumentChunk
             {
@@ -72,15 +72,17 @@ internal class CosmosDBClientWrapper
         }
     }
 
-    private async Task<ItemResponse<DocumentChunk>> UpsertDocumentWithRetryAsync(DocumentChunk document,
-        int maxRetryAttempts, CancellationToken cancellationToken)
+    private async Task<ItemResponse<DocumentChunk>> UpsertDocumentWithRetryAsync(
+        DocumentChunk document,
+        int maxRetryAttempts,
+        CancellationToken cancellationToken)
     {
         if (this.container == null)
         {
             throw new InvalidOperationException("Container is not initialized.");
         }
 
-        int retryCount = 0;
+        var retryCount = 0;
         while (retryCount < maxRetryAttempts)
         {
             try
@@ -90,11 +92,11 @@ internal class CosmosDBClientWrapper
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.TooManyRequests)
             {
                 retryCount++;
-                await Task.Delay(ex.RetryAfter.GetValueOrDefault());
+                await Task.Delay(ex.RetryAfter.GetValueOrDefault(), cancellationToken);
             }
             catch (Exception ex)
             {
-                this.logger.LogError($"An error occurred while upserting document with ID {document.ChunkId}: {ex.Message}");
+                this.logger.LogError("An error occurred while upserting document with ID {chunkId}: {exceptionMessage}", document.ChunkId, ex.Message);
                 throw;
             }
         }

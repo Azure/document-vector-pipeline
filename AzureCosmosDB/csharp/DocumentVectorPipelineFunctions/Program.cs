@@ -16,8 +16,8 @@ const string AzureCosmosDBConnectionString = "AzureCosmosDBConnectionString";
 const string AzureOpenAIConnectionString = "AzureOpenAIConnectionString";
 const string AzureOpenAIModelDeploymentConfigName = "AzureOpenAIModelDeployment";
 
-string? managedIdentityClientId = Environment.GetEnvironmentVariable("AzureManagedIdentityClientId");
-bool local = Convert.ToBoolean(Environment.GetEnvironmentVariable("RunningLocally"));
+var managedIdentityClientId = Environment.GetEnvironmentVariable("AzureManagedIdentityClientId");
+var local = Convert.ToBoolean(Environment.GetEnvironmentVariable("RunningLocally"));
 
 TokenCredential credential = local
     ? new DefaultAzureCredential()
@@ -44,9 +44,9 @@ hostBuilder.ConfigureServices(sc =>
     sc.AddSingleton<CosmosClient>(sp =>
     {
         var config = sp.GetRequiredService<IConfiguration>();
-        var cosmosdbEndpoint = config[AzureCosmosDBConnectionString] ?? throw new Exception($"Configure {AzureCosmosDBConnectionString}");
+        var cosmosDbEndpoint = config[AzureCosmosDBConnectionString] ?? throw new Exception($"Configure {AzureCosmosDBConnectionString}");
         var cosmosClient = new CosmosClient(
-            cosmosdbEndpoint,
+            cosmosDbEndpoint,
             credential,
             new CosmosClientOptions
             {
