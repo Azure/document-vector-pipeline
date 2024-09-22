@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore AzureCosmosDB\csharp\DocumentVectorPipeline.sln
+      run: dotnet restore AzureCosmosDB/csharp/DocumentVectorPipeline.sln
     - name: Build
-      run: dotnet build --no-restore AzureCosmosDB\csharp\DocumentVectorPipeline.sln
+      run: dotnet build --no-restore AzureCosmosDB/csharp/DocumentVectorPipeline.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal AzureCosmosDB\csharp\DocumentVectorPipeline.sln
+      run: dotnet test --no-build --verbosity normal AzureCosmosDB/csharp/DocumentVectorPipeline.sln
