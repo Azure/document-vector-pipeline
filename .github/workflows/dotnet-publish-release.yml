@@ -1,0 +1,27 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET Publish 
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Publish
+      run: dotnet publish -c Release AzureCosmosDB/csharp/DocumentVectorPipeline.sln
+    - name: Upload dotnet test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: DocumentVectorPipelineFunctions.zip
+        path: AzureCosmosDB/csharp/DocumentVectorPipelineFunctions/bin/Release/net8.0/publish
