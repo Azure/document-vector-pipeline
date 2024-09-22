@@ -23,5 +23,5 @@ jobs:
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v4
       with:
-        name: DocumentVectorPipelineFunctions.zip
+        name: DocumentVectorPipelineFunctions
         path: AzureCosmosDB/csharp/DocumentVectorPipelineFunctions/bin/Release/net8.0/publish
