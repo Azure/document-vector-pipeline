@@ -17,6 +17,9 @@ param function_app_appInsightsName string = '${function_app_name}insight'
 param function_app_logAnalyticsName string = '${function_app_name}log'
 param function_app_appServicePlanName string = '${function_app_name}service'
 
+param maxTokensPerChunk string
+param overlapTokens string
+
 // CosmosDB params
 param cosmosdb_capabilities array
 param cosmosdb_databaseName string
@@ -128,6 +131,8 @@ module function_app_deployment 'functionapp.bicep' = {
     storageAccountName: storage_name
     modelDeployment: modelDeployment
     modelDimensions: modelDimensions
+    maxTokensPerChunk: maxTokensPerChunk
+    overlapTokens: overlapTokens
   }
   dependsOn: [
     userManagedIdentity_deployment

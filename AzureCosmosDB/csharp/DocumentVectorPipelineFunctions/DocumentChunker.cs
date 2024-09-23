@@ -14,15 +14,15 @@ internal record struct TextChunk(
 
 internal class DocumentChunker
 {
-    private const int DefaultMaxTokensPerChunk = 250;
-    private const int DefaultTokenOverlap = 0;
+    public const int DefaultMaxTokensPerChunk = 250;
+    public const int DefaultOverlapTokens = 0;
 
 #pragma warning disable SKEXP0050 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
     public static IEnumerable<TextChunk> FixedSizeChunking(
         AnalyzeResult? result,
-        int maxTokensPerChunk = DefaultMaxTokensPerChunk,
-        int overlapTokens = DefaultTokenOverlap)
+        int maxTokensPerChunk,
+        int overlapTokens)
     {
         if (result == null)
         {
