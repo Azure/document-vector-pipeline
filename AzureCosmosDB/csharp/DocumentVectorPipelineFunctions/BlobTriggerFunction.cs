@@ -68,7 +68,7 @@ public class BlobTriggerFunction(
         var result = operation.Value;
         this._logger.LogInformation("Extracted content from '{name}', # pages {pageCount}", blobClient.Name, result.Pages.Count);
 
-        var textChunks = TextChunker.FixedSizeChunking(result).ToList();
+        var textChunks = DocumentChunker.FixedSizeChunking(result).ToList();
         var listOfBatches = textChunks.Chunk(MaxBatchSize).ToList();
 
         this._logger.LogInformation("Processing list of batches in parallel, total batches: {listSize}, chunks count: {chunksCount}", listOfBatches.Count, textChunks.Count);
