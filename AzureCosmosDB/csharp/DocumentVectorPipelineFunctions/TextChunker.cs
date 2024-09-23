@@ -30,7 +30,7 @@ internal class TextChunker
                 if (sb.Length > chunkSize)
                 {
                     sb.Length -= 1;
-                    string chunk = sb.ToString();
+                    var chunk = sb.ToString();
                     sb.Clear();
 
                     yield return new TextChunk(chunk, pageIndex, chunkIndex);
@@ -43,7 +43,7 @@ internal class TextChunker
         if (sb.Length > 1)
         {
             sb.Length -= 1;
-            string chunk = sb.ToString();
+            var chunk = sb.ToString();
             yield return new TextChunk(chunk, pageIndex, chunkIndex);
         }
     }
