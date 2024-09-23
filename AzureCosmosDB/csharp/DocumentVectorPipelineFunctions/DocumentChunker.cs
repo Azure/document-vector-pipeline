@@ -80,7 +80,7 @@ internal class DocumentChunker
                 if (wordCount > MaxChunkWordCount)
                 {
                     sb.Length -= 1;
-                    string chunk = sb.ToString();
+                    var chunk = sb.ToString();
                     sb.Clear();
                     wordCount = 0;
 
@@ -92,7 +92,7 @@ internal class DocumentChunker
         if (sb.Length > 0)
         {
             sb.Length -= 1;
-            string chunk = sb.ToString();
+            var chunk = sb.ToString();
             yield return chunk;
         }
     }
