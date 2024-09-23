@@ -23,6 +23,9 @@ public class BlobTriggerFunction(
     private const string AzureOpenAIModelDeploymentDimensionsName = "AzureOpenAIModelDimensions";
     private static readonly int DefaultDimensions = 1536;
 
+    private const string MaxTokensPerChunkName = "MaxTokensPerChunk";
+    private const string OverlapTokensName = "OverlapTokens";
+
     private const int MaxRetryCount = 100;
     private const int RetryDelay = 10 * 1000; // 10 seconds
 
@@ -54,6 +57,9 @@ public class BlobTriggerFunction(
         this.embeddingDimensions = configuration.GetValue<int>(AzureOpenAIModelDeploymentDimensionsName, DefaultDimensions);
         this._logger.LogInformation("Using OpenAI model dimensions: '{embeddingDimensions}'.", this.embeddingDimensions);
 
+        var maxTokensPerChunk = configuration.GetValue<int>(MaxTokensPerChunkName, DocumentChunker.DefaultMaxTokensPerChunk);
+        var overlapTokens = configuration.GetValue<int>(OverlapTokensName, DocumentChunker.DefaultOverlapTokens);
+
         this._logger.LogInformation("Analyzing document using DocumentAnalyzerService from blobUri: '{blobUri}' using layout: {layout}", blobClient.Name, "prebuilt-read");
 
         using var memoryStream = new MemoryStream();
@@ -68,7 +74,7 @@ public class BlobTriggerFunction(
         var result = operation.Value;
         this._logger.LogInformation("Extracted content from '{name}', # pages {pageCount}", blobClient.Name, result.Pages.Count);
 
-        var textChunks = TextChunker.FixedSizeChunking(result).ToList();
+        var textChunks = DocumentChunker.FixedSizeChunking(result, maxTokensPerChunk, overlapTokens).ToList();
         var listOfBatches = textChunks.Chunk(MaxBatchSize).ToList();
 
         this._logger.LogInformation("Processing list of batches in parallel, total batches: {listSize}, chunks count: {chunksCount}", listOfBatches.Count, textChunks.Count);

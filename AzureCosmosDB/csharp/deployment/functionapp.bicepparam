@@ -15,3 +15,6 @@ param logAnalyticsName = '${functionAppName}log'
 
 param modelDeployment = 'text-embedding-3-large'
 param modelDimensions = '1536'
+
+param maxTokensPerChunk = '250'
+param overlapTokens = '0'

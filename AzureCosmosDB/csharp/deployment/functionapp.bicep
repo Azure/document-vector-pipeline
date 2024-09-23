@@ -14,6 +14,8 @@ param openAIAccountName string
 param storageAccountName string
 param modelDeployment string
 param modelDimensions string
+param maxTokensPerChunk string
+param overlapTokens string
 
 // Get existing managed identity resource
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-preview' existing = {
@@ -210,6 +212,14 @@ resource funcApp 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'AzureOpenAIModelDimensions'
           value: modelDimensions
+        }
+        {
+          name: 'MaxTokensPerChunk'
+          value: maxTokensPerChunk
+        }
+        {
+          name: 'OverlapTokens'
+          value: overlapTokens
         }
         {
           name: 'AzureFunctionsJobHost__functionTimeout'

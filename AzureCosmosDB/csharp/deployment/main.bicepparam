@@ -23,6 +23,9 @@ param storage_containers = [
 // Function app params
 param function_app_storageSkuName = 'Standard_LRS'
 
+param maxTokensPerChunk = '250'
+param overlapTokens = '0'
+
 // CosmosDB params
 param cosmosdb_databaseName = 'semantic_search_db'
 param cosmosdb_capabilities = [

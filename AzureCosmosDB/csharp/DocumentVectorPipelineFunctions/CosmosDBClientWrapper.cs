@@ -49,7 +49,6 @@ internal class CosmosDBClientWrapper
                 DocumentUrl = fileUri,
                 Embedding = embeddings[index].Vector,
                 ChunkText = chunks[index].Text,
-                PageNumber = chunks[index].PageNumberIfKnown,
             };
             upsertTasks.Add(this.UpsertDocumentWithRetryAsync(documentChunk, CosmosDBClientWrapper.MaxRetryCount, cancellationToken));
         }
@@ -166,9 +165,6 @@ internal class CosmosDBClientWrapper
     {
         [JsonPropertyName("id")]
         public string? ChunkId { get; init; }
-
-        [JsonPropertyName("page_number")]
-        public int PageNumber { get; init; }
 
         [JsonPropertyName("document_url")]
         public string? DocumentUrl { get; init; }
