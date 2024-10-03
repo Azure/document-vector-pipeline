@@ -1,9 +1,5 @@
 ﻿using System.Text;
-using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
-using DocumentVectorPipelineFunctions;
-using Google.Protobuf.Collections;
-using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using Microsoft.SemanticKernel.Text;
 
 namespace DocumentVectorPipelineFunctions;
@@ -12,7 +8,7 @@ internal record struct TextChunk(
     string Text,
     int ChunkNumber);
 
-internal class DocumentChunker
+internal static class DocumentChunker
 {
     public const int DefaultMaxTokensPerChunk = 250;
     public const int DefaultOverlapTokens = 0;
@@ -63,6 +59,27 @@ internal class DocumentChunker
         return TextChunker.SplitPlainTextParagraphs(lines, maxTokensPerChunk, overlapTokens)
             .Select(para => new TextChunk(para, chunkNumber++));
     }
+
+    public static IEnumerable<TextChunk> ChunkTextLines(
+        IEnumerable<string> lines,
+        int maxTokensPerChunk,
+        int overlapTokens)
+    {
+        var chunkNumber = 0;
+        return TextChunker.SplitMarkdownParagraphs(lines, maxTokensPerChunk, overlapTokens)
+            .Select(para => new TextChunk(para, chunkNumber++));
+    }
+
+    public static IEnumerable<TextChunk> ChunkMarkdownLines(
+        IEnumerable<string> lines,
+        int maxTokensPerChunk,
+        int overlapTokens)
+    {
+        var chunkNumber = 0;
+        return TextChunker.SplitMarkdownParagraphs(lines, maxTokensPerChunk, overlapTokens)
+            .Select(para => new TextChunk(para, chunkNumber++));
+    }
+
 #pragma warning restore SKEXP0050 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
     private const int MaxChunkWordCount = 40;
