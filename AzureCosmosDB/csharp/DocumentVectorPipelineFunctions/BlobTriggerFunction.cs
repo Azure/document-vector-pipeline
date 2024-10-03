@@ -1,5 +1,8 @@
 using System.ClientModel;
+using System.IO;
 using System.Net;
+using System.Text;
+using System.Threading;
 using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Storage.Blobs;
@@ -60,21 +63,41 @@ public class BlobTriggerFunction(
         var maxTokensPerChunk = configuration.GetValue<int>(MaxTokensPerChunkName, DocumentChunker.DefaultMaxTokensPerChunk);
         var overlapTokens = configuration.GetValue<int>(OverlapTokensName, DocumentChunker.DefaultOverlapTokens);
 
-        this._logger.LogInformation("Analyzing document using DocumentAnalyzerService from blobUri: '{blobUri}' using layout: {layout}", blobClient.Name, "prebuilt-read");
+        var extension = Path.GetExtension(blobClient.Name);
+        var textChunks = new List<TextChunk>();
+        if (extension == ".txt")
+        {
+            using var stream = await blobClient.OpenReadAsync();
+            var lines = await ReadAllLinesAsync(stream);
+            textChunks.AddRange(DocumentChunker.ChunkTextLines(
+                lines, maxTokensPerChunk, overlapTokens));
+        }
+        else if (extension == ".md")
+        {
+            using var stream = await blobClient.OpenReadAsync();
+            var lines = await ReadAllLinesAsync(stream);
+            textChunks.AddRange(DocumentChunker.ChunkMarkdownLines(
+                lines, maxTokensPerChunk, overlapTokens));
+        }
+        else
+        {
+            this._logger.LogInformation("Analyzing document using DocumentAnalyzerService from blobUri: '{blobUri}' using layout: {layout}", blobClient.Name, "prebuilt-read");
 
-        using var memoryStream = new MemoryStream();
-        await blobClient.DownloadToAsync(memoryStream);
-        memoryStream.Seek(0, SeekOrigin.Begin);
+            using var memoryStream = new MemoryStream();
+            await blobClient.DownloadToAsync(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
 
-        var operation = await documentAnalysisClient.AnalyzeDocumentAsync(
-            WaitUntil.Completed,
-            "prebuilt-read",
-            memoryStream);
+            var operation = await documentAnalysisClient.AnalyzeDocumentAsync(
+                WaitUntil.Completed,
+                "prebuilt-read",
+                memoryStream);
 
-        var result = operation.Value;
-        this._logger.LogInformation("Extracted content from '{name}', # pages {pageCount}", blobClient.Name, result.Pages.Count);
+            var result = operation.Value;
+            this._logger.LogInformation("Extracted content from '{name}', # pages {pageCount}", blobClient.Name, result.Pages.Count);
 
-        var textChunks = DocumentChunker.FixedSizeChunking(result, maxTokensPerChunk, overlapTokens).ToList();
+            textChunks.AddRange(DocumentChunker.FixedSizeChunking(result, maxTokensPerChunk, overlapTokens));
+        }
+
         var listOfBatches = textChunks.Chunk(MaxBatchSize).ToList();
 
         this._logger.LogInformation("Processing list of batches in parallel, total batches: {listSize}, chunks count: {chunksCount}", listOfBatches.Count, textChunks.Count);
@@ -139,5 +162,24 @@ public class BlobTriggerFunction(
         this._logger.LogInformation("Handling delete event for blob name {name}.", blobClient.Name);
 
         await Task.Delay(1);
+    }
+
+    private static async Task<List<string>> ReadAllLinesAsync(
+        Stream inputStream,
+        CancellationToken cancellationToken = default)
+    {
+        using var sr = new StreamReader(
+            inputStream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+
+        cancellationToken.ThrowIfCancellationRequested();
+        string? line;
+        var lines = new List<string>();
+        while ((line = await sr.ReadLineAsync(cancellationToken)) != null)
+        {
+            lines.Add(line);
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+
+        return lines;
     }
 }
