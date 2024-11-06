@@ -1,4 +1,4 @@
-# Azure Cosmos DB Document Ingestion & Processing Pipeline - solution Accelerator
+# Azure Cosmos DB Document Ingestion & Processing Pipeline - Solution Accelerator
 
 ## Background
 This solution accelerator configures a simple pipeline for ingesting content stored in document form (pdf, docx, etc) into a searchable index in Azure Cosmos DB for NoSQL.
