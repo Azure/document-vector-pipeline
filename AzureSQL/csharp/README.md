@@ -41,6 +41,7 @@ Currently this proof of concept uses:
 ### Steps
 
 1. Set subscription id and the resource group name that you want to deploy the resources to.:
+
     ```powershell
     $sub = ""
     $rg = ""
