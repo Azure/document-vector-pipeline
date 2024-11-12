@@ -1,0 +1,19 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsAzureBlobStorageAccConnectionString__blobServiceUri": "https://.blob.core.windows.net",
+    "AzureWebJobsAzureBlobStorageAccConnectionString__queueServiceUri": "https://.queue.core.windows.net",
+    "AzureDocumentIntelligenceConnectionString": "https://.cognitiveservices.azure.com/",
+    "AzureDocumentIntelligenceKey": "",
+    "AzureOpenAIKey": "",
+    "AzureOpenAIConnectionString": "https://.openai.azure.com/",
+    "RunningLocally": true,
+    "AzureOpenAIModelDeployment": "text-embedding-3-small",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "SqlConnectionString": "Server=tcp:.database.windows.net,1433;Initial Catalog=;Connection Timeout=30;Authentication=Active Directory Default",
+    "DocumentTableSchema": "dbo",
+    "DocumentTableName": "[document]"
+  }
+}
+
