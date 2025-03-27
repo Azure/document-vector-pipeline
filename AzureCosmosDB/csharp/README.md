@@ -71,7 +71,7 @@ Currently this proof of concept uses:
     1. Set the Partition Key to `/document_url`.
     1. Create a new Vector embedding with:
         1. Path: `/embedding`
-        1. Datatype: loat32
+        1. Datatype: float32
         1. Distance Function: cosine,
         1. Dimensions: 1536
         1. Index type: quantizedFlat
