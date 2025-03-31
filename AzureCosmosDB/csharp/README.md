@@ -63,6 +63,19 @@ Currently this proof of concept uses:
 
     ![screenshot](images/enable-vector-search.png "Enable vector search")
 
+1. Create Databse and Container
+
+    1. In the account above, navigate to Explorer and Create a new container.
+    1. For the Database, create a new database named `semantic_search_db`.
+    1. For the Container, name it `doc_search_container`.
+    1. Set the Partition Key to `/document_url`.
+    1. Create a new Vector embedding with:
+        1. Path: `/embedding`
+        1. Datatype: float32
+        1. Distance Function: cosine,
+        1. Dimensions: 1536
+        1. Index type: quantizedFlat
+
 1. Deploy the functions app code
     Set variables for the path to the zip file you downloaded in the prerequisites, and for the name of the functions app. By default, that will be `docingfuncapp` as below. 
    ```powershell
