@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.17.4" />
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.7.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
-    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.70.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.71.0" />
   </ItemGroup>
   <ItemGroup>
     <!-- Transitive references that have security vulnerabilities that we are lifting to patched versions. -->
